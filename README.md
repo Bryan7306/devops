@@ -1,1 +1,1 @@
-GitHub repository for Software Engineering Methods lab work.
+GitHub repository used for Software Engineering Methods lab work.
