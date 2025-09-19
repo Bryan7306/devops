@@ -1,1 +1,1 @@
-Files relating to Software Engineering Methods lab work.
+GitHub repository for Software Engineering Methods lab work.
