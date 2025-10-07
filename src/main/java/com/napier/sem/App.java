@@ -102,7 +102,7 @@ public class App
                             + "JOIN departments ON departments.dept_no=dept_emp.dept_no "
                             + "JOIN dept_manager ON dept_manager.dept_no=departments.dept_no "
                             + "JOIN employees AS manager ON manager.emp_no = dept_manager.emp_no "
-                            + "WHERE employees.emp_no = " + ID;
+                            + "WHERE dept_emp.to_date = '9999-01-01' AND employees.emp_no = " + ID;
             // Execute SQL statement
             ResultSet rset = stmt.executeQuery(strSelect);
             // Return new employee if valid.
