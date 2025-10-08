@@ -1,0 +1,19 @@
+@startuml
+
+actor HR as "HR Advisor"
+
+actor EMP as "Employee"
+
+rectangle "HR System" {
+    usecase UC4 as "Get employee
+    information"
+
+    usecase UCa as "Add employee
+    to database"
+
+    HR - UC4
+    UC4 ..> UCa : include
+    UC4 - EMP
+}
+
+@enduml
