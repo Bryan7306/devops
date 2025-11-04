@@ -17,7 +17,6 @@ public class App {
         Department dept = a.getDepartment("Development");
         ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
 
-
         // Print salary report
         a.printSalaries(employees);
 
