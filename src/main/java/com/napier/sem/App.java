@@ -14,11 +14,8 @@ public class App {
             a.connect(args[0], Integer.parseInt(args[1]));
         }
 
-        Department dept = a.getDepartment("Development");
-        ArrayList<Employee> employees = a.getSalariesByDepartment(dept);
-
-        // Print salary report
-        a.printSalaries(employees);
+        Employee emp = a.getEmployee(255530);
+        a.displayEmployee(emp);
 
         // Disconnect from database
         a.disconnect();
@@ -103,7 +100,11 @@ public class App {
                 emp.last_name = rset.getString("last_name");
                 emp.title = rset.getString("title");
                 emp.salary = rset.getInt("salary");
+
+                emp.manager = new Employee();
                 emp.manager.first_name = rset.getString("manager");
+
+                emp.dept = new Department();
                 emp.dept.dept_no = rset.getString("dept_name");
                 return emp;
             } else
