@@ -14,8 +14,8 @@ public class App {
             a.connect(args[0], Integer.parseInt(args[1]));
         }
 
-        Employee emp = a.getEmployee(255530);
-        a.displayEmployee(emp);
+        Department dept = a.getDepartment("Sales");
+        a.displayDepartment(dept);
 
         // Disconnect from database
         a.disconnect();
@@ -132,6 +132,18 @@ public class App {
         }
     }
 
+    public void displayDepartment(Department dept) {
+        if (dept != null) {
+            System.out.println(
+                    dept.dept_no + "\n" +
+                            dept.dept_name + "\n" +
+                            dept.manager.emp_no);
+        }
+        else{
+            System.out.println("Department is null");
+        }
+    }
+
     /**
      * Gets all the current employees and salaries.
      *
@@ -199,8 +211,9 @@ public class App {
             Statement stmt = con.createStatement();
 
             String strSelect =
-                    "SELECT dept_no, dept_name " +
+                    "SELECT departments.dept_no, departments.dept_name, dept_manager.emp_no " +
                             "FROM departments " +
+                            "JOIN dept_manager ON dept_manager.dept_no = departments.dept_no " +
                             "WHERE dept_name = '" + dept_name + "' " +
                             "ORDER BY dept_no ASC";
 
@@ -208,8 +221,11 @@ public class App {
             Department dept = new Department();
 
             if(rset.next()){
-                dept.dept_no = rset.getString("dept_no");
-                dept.dept_name = rset.getString("dept_name");
+                dept.dept_no = rset.getString("departments.dept_no");
+                dept.dept_name = rset.getString("departments.dept_name");
+
+                dept.manager = new Employee();
+                dept.manager.emp_no = rset.getInt("dept_manager.emp_no");
             }
             return dept;
         } catch(Exception e){
