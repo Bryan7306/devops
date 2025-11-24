@@ -10,12 +10,9 @@ public class App {
 
         if(args.length < 1){
             a.connect("localhost:33060", 30000);
-        }else{
+        }else {
             a.connect(args[0], Integer.parseInt(args[1]));
         }
-
-        Department dept = a.getDepartment("Sales");
-        a.displayDepartment(dept);
 
         // Disconnect from database
         a.disconnect();
