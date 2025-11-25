@@ -56,7 +56,6 @@ public class AppTest
     @Test
     void displayEmployeeTestNull()
     {
-
         app.displayEmployee(null);
     }
 }

@@ -16,32 +16,30 @@ import java.util.ArrayList;
 @SpringBootApplication
 @RestController
 public class App {
-    public static void main(String[] args) {
-        // Create new Application and connect to database
-        App app = new App();
-
-        if (args.length < 1) {
-            app.connect("localhost:33060", 0);
-        } else {
-            app.connect(args[0], Integer.parseInt(args[1]));
+    public static void main(String[] args)
+    {
+        // Connect to database
+        if (args.length < 1)
+        {
+            connect("localhost:33060");
+        }
+        else
+        {
+            connect(args[0]);
         }
 
-        ArrayList<Employee> employees = app.getSalariesByRole("Manager");
-        app.outputEmployees(employees, "ManagerSalaries.md");
-
-        // Disconnect from database
-        app.disconnect();
+        SpringApplication.run(App.class, args);
     }
 
     /**
      * Connection to MySQL database.
      */
-    private Connection con = null;
+    private static Connection con = null;
 
     /**
      * Connect to the MySQL database.
      */
-    public void connect(String location, int delay) {
+    public static void connect(String location) {
         try {
             // Load Database driver
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -55,7 +53,7 @@ public class App {
             System.out.println("Connecting to database...");
             try {
                 // Wait a bit for db to start
-                Thread.sleep(delay);
+                Thread.sleep(3000);
                 // Connect to database
                 con = DriverManager.getConnection("jdbc:mysql://" + location
                                 + "/employees?allowPublicKeyRetrieval=true&useSSL=false",
@@ -74,7 +72,7 @@ public class App {
     /**
      * Disconnect from the MySQL database.
      */
-    public void disconnect() {
+    public static void disconnect() {
         if (con != null) {
             try {
                 // Close connection
@@ -85,7 +83,13 @@ public class App {
         }
     }
 
-    public Employee getEmployee(int ID) {
+    /**
+     * Get a single employee record.
+     * @param ID emp_no of the employee record to get.
+     * @return The record of the employee with emp_no or null if no employee exists.
+     */
+    @RequestMapping("employee")
+    public Employee getEmployee(@RequestParam(value = "id") String ID) {
         try {
             // Create an SQL statement
             Statement stmt = con.createStatement();
@@ -161,6 +165,7 @@ public class App {
      *
      * @return A list of all employees and salaries, or null if there is an error.
      */
+    @RequestMapping("salaries")
     public ArrayList<Employee> getAllSalaries() {
         try {
             // Create an SQL statement
@@ -218,7 +223,8 @@ public class App {
         }
     }
 
-    public Department getDepartment(String dept_name) {
+    @RequestMapping("department")
+    public Department getDepartment(@RequestParam(value = "dept") String dept_name) {
         try{
             Statement stmt = con.createStatement();
 
@@ -247,7 +253,8 @@ public class App {
         }
     }
 
-    public ArrayList<Employee> getSalariesByDepartment(Department dept) {
+    @RequestMapping("salaries_department")
+    public ArrayList<Employee> getSalariesByDepartment(@RequestParam(value = "dept") String dept_name) {
         try{
             Statement stmt = con.createStatement();
 
@@ -257,7 +264,7 @@ public class App {
                             + "WHERE employees.emp_no = salaries.emp_no " +
                             "AND employees.emp_no = dept_emp.emp_no " +
                             "AND salaries.to_date = '9999-01-01' " +
-                            "AND departments.dept_no = '" + dept.dept_no + "' "
+                            "AND departments.dept_name = '" + dept_name + "' "
                             + "ORDER BY employees.emp_no ASC";
 
             ResultSet rset = stmt.executeQuery(strSelect);
@@ -280,7 +287,8 @@ public class App {
         }
     }
 
-    public ArrayList<Employee> getSalariesByRole(String role) {
+    @RequestMapping("salaries_title")
+    public ArrayList<Employee> getSalariesByTitle(@RequestParam(value = "title") String role) {
         try{
             Statement stmt = con.createStatement();
 
